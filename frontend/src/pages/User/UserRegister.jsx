@@ -24,6 +24,10 @@ const UserRegister = () => {
                 const result = await fetchUserRegister(name, email, password)
                 setAlertMessage(result.data.message)
                 setAlert(true)
+                setEmail("")
+                setName("")
+                setPassword("")
+                setConfirmPassword("")
             } else {
                 setAlertMessage("As senhas não conferem.")
                 setAlert(true)
@@ -81,7 +85,7 @@ const UserRegister = () => {
                     <AlertDialogTrigger />
                     <AlertDialogContent className="dark font-mont ">
                         <AlertDialogHeader>
-                            <AlertDialogTitle className="text-second-100">Erro</AlertDialogTitle>
+                            <AlertDialogTitle className="text-second-100">INFORMAÇÃO</AlertDialogTitle>
                             <AlertDialogDescription>
                                 {alertMessage}
                             </AlertDialogDescription>
