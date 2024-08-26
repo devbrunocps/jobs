@@ -1,6 +1,6 @@
 const config = {
     urlAxios: "http://localhost:",
-    portAxios: "5000"
+    portAxios: "3000"
 }
 
 export default config

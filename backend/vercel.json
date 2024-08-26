@@ -1,0 +1,12 @@
+{
+    "version": 2,
+    "build": {
+        "command": "npm run build"
+    },
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "build/$1"
+        }
+    ]
+}
