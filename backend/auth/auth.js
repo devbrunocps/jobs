@@ -33,12 +33,13 @@ router.post('/user/login', async (req, res) => {
         // Gera um token JWT
         const token = jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: "1h" });
 
-        res.json({ token });
+        res.json({ token, name: user.name, email: user.email });
     } catch (err) {
         console.error('Erro no servidor:', err);
         res.status(500).json({ message: 'ERRO NO SERVIDOR' });
     }
 });
+
 
 // CADASTRO USUÁRIO
 router.post('/user/register', async (req, res) => {
@@ -67,13 +68,19 @@ router.post('/user/register', async (req, res) => {
     }
 });
 
+//FORMAT CNPJ
+
+const formatCnpj = (cnpj) => {
+    return cnpj.replace(/\D/g, '');
+}
+
 // LOGIN EMPRESA
 router.post('/company/login', async (req, res) => {
     try {
         const { cnpj, password } = req.body;
 
         const query = 'SELECT * FROM companies WHERE cnpj = ?';
-        const [result] = await db.promise().query(query, [cnpj]);
+        const [result] = await db.promise().query(query, [formatCnpj(cnpj)]);
 
         if (result.length === 0) {
             return res.status(401).json({ message: 'CNPJ NÃO ENCONTRADA' });
@@ -90,7 +97,7 @@ router.post('/company/login', async (req, res) => {
         // Gera um token JWT
         const token = jwt.sign({ id: company.id }, JWT_SECRET, { expiresIn: "1h" });
 
-        res.json({ token });
+        res.json({ token, cnpj: company.cnpj, name:company.name });
     } catch (err) {
         console.error('Erro no servidor:', err);
         res.status(500).json({ message: 'ERRO NO SERVIDOR' });
@@ -104,7 +111,7 @@ router.post('/company/register', async (req, res) => {
 
         // Verifica se já existe uma empresa com esse CNPJ
         const query = 'SELECT * FROM companies WHERE cnpj = ?';
-        const [result] = await db.promise().query(query, [cnpj]);
+        const [result] = await db.promise().query(query, [formatCnpj(cnpj)]);
 
         if (result.length > 0) {
             return res.status(400).json({ message: 'CNPJ JÁ EM USO' });

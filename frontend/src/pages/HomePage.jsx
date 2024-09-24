@@ -10,7 +10,7 @@ const HomePage = () => {
                 <div className="container mx-auto flex items-center justify-between">
                     <a href="/" className="flex items-center gap-2" prefetch={false}>
                         <Laptop2 className="h-6 w-6" />
-                        <span className="text-lg font-semibold">JOBS IT</span>
+                        <span className="text-lg font-semibold">TECJOB</span>
                     </a>
                     <div className="flex items-center gap-4">
                         <a
@@ -34,11 +34,11 @@ const HomePage = () => {
                 <section className="container mx-auto py-12 md:py-24 lg:py-32">
                     <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 lg:gap-16">
                         <div className="space-y-4">
-                            <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
+                            <h1 className="text-3xl font-medium tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl">
                                 Encontre o candidato ou a empresa perfeita
                             </h1>
                             <p className="text-muted-foreground md:text-xl">
-                                JOBS IT é a plataforma líder em conectar os melhores talentos com empresas líderes no mercado de TI.
+                                TECJOB é a plataforma líder em conectar os melhores talentos com empresas líderes no mercado de TI.
                                 Junte-se a nós hoje e leve sua carreira ou sua empresa para outro patamar.
                             </p>
                             <div className="flex flex-col gap-2 sm:flex-row">
@@ -63,7 +63,7 @@ const HomePage = () => {
                 </section>
             </main>
             <footer className="z-50 bg-background py-6 text-center text-xs text-muted-foreground">
-                <div className="container mx-auto">&copy; 2024 Jobs IT. Todos os direitos reservados.</div>
+                <div className="container mx-auto">&copy; 2024 TECJOB. Todos os direitos reservados.</div>
             </footer>
         </div>
     )

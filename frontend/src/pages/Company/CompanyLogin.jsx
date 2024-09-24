@@ -44,7 +44,7 @@ const CompanyLogin = () => {
         <div className="dark text-second-100 font-mont flex min-h-[100dvh] items-center justify-center bg-background gap-12 px-4 py-12 sm:px-6 lg:px-8">
             <a href="/" className="flex absolute top-8 left-8 items-center gap-2" prefetch={false}>
                 <Laptop2 className="h-6 w-6" />
-                <span className="text-lg font-semibold">JOBS IT</span>
+                <span className="text-lg font-semibold">TECJOB</span>
             </a>
             <Card className="w-full flex flex-col justify-center max-w-md">
                 <CardHeader>

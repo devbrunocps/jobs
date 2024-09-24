@@ -9,7 +9,7 @@ const JobsDetails = ({ job }) => {
     }
 
     return (
-        <div className='w-2/3 max-sm:w-full max-sm:px-8 flex flex-col gap-6 py-8 xl:overflow-y-auto scroll-style'>
+        <div className='w-2/3 max-sm:w-full max-sm:px-8 max-sm:max-h-full max-sm:overflow-y-auto flex flex-col gap-6 py-8 xl:overflow-y-auto scroll-style'>
             <div className='w-full flex flex-col items-start gap-3'>
                 <h1 className='text-neutral-100 font-mont uppercase font-extrabold text-3xl'>{job.title}</h1>
                 <div className='flex items-center gap-2'>
