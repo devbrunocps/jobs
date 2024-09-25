@@ -15,15 +15,15 @@ router.get("/", (req, res) => {
 // API ANUNCIAR UMA VAGA
 
 router.post("/", (req, res) => {
-    const { title, longDesc, lowDesc, company_id, salary, location, jobType, workModel, benefits } = req.body;
+    const { title, longDesc, lowDesc, company_id, salary, location, jobType, workModel, benefits, company } = req.body;
 
     const salaryString = `R$${salary}`
     const ids_candidates = '[]'
     const benefitsString = JSON.stringify(benefits)
 
-    
+
     const formatDateYMDUsingSplit = (date) => {
-        const isoString = date.toISOString(); 
+        const isoString = date.toISOString();
         const [ano, mes, dia] = isoString.split('T')[0].split('-');
         return `${ano}/${mes}/${dia}`;
     };
@@ -31,11 +31,9 @@ router.post("/", (req, res) => {
     const novaData = new Date();
     const dataFormatada = formatDateYMDUsingSplit(novaData);
 
-    console.log(benefits)
+    const q = 'INSERT INTO jobs (title, longDesc, lowDesc, company_id, salary, location, jobType, workModel, benefits, ids_candidates, createdAt, number_candidates, company) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)';
 
-    const q = 'INSERT INTO jobs (title, longDesc, lowDesc, company_id, salary, location, jobType, workModel, benefits, ids_candidates, createdAt) VALUES (?,?,?,?,?,?,?,?,?,?,?)';
-
-    db.query(q, [title, longDesc, lowDesc, company_id, salaryString, location, jobType, workModel, benefitsString, ids_candidates, dataFormatada], (err, result) => {
+    db.query(q, [title, longDesc, lowDesc, company_id, salaryString, location, jobType, workModel, benefitsString, ids_candidates, dataFormatada, 0, company], (err, result) => {
         if (err) return res.status(500).json(err);
         res.status(201).json(result);
     });
@@ -75,6 +73,17 @@ router.get("/company/:companyId", (req, res) => {
     const { companyId } = req.params
     const q = 'SELECT * FROM jobs WHERE company_id =?'
     db.query(q, [companyId], (err, result) => {
+        if (err) return res.json(err)
+        res.json(result)
+    })
+})
+
+//DELETAR JOB
+
+router.delete("/:jobId", (req, res) => {
+    const { jobId } = req.params
+    const q = 'DELETE FROM jobs WHERE jobs_id =?'
+    db.query(q, [jobId], (err, result) => {
         if (err) return res.json(err)
         res.json(result)
     })

@@ -5,8 +5,11 @@ import { Button } from "@/components/ui/button"
 import { Laptop2 } from "lucide-react"
 import { useContext, useState } from "react"
 import { AuthContext } from "@/context/AuthContext"
+import { DataContext } from "@/context/DataContext"
 
 const CompanyRegister = () => {
+    const data = useContext(DataContext)
+    
     const [name, setName] = useState("")
     const [cnpj, setCnpj] = useState("")
     const [password, setPassword] = useState("")
@@ -30,8 +33,9 @@ const CompanyRegister = () => {
 
     const handleSubmit = async () => {
         if (name, cnpj, password, confirmPassword) {
+            const cnpjFormatted = data.formatCnpj(cnpj)
             if (password === confirmPassword) {
-                const result = await fetchCompanyRegister(name, cnpj, password)
+                const result = await fetchCompanyRegister(name, cnpjFormatted, password)
                 console.log(result)
             } else {
                 alert("As senhas não conferem.")

@@ -1,7 +1,7 @@
 import { BriefcaseBusiness, DollarSign, Gift, MapPin, Users } from 'lucide-react';
 import React from 'react'
 
-const JobsDetails = ({ job }) => {
+const JobsDetails = ({ job, candidate, applyToJob }) => {
 
     const convertDate = (date) => {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -46,13 +46,13 @@ const JobsDetails = ({ job }) => {
                 </div>
                 <div className='flex gap-1 items-center'>
                     <Users className='text-second-100' size={15} />
-                    <p className='text-second-100 font-mont text-sm'>{job.candidates} candidatos</p>
+                    <p className='text-second-100 font-mont text-sm'>{job.number_candidates} candidatos</p>
                 </div>
             </div>
 
-            <div className='flex'>
+            {candidate && <div onClick={applyToJob} className='flex'>
                 <button className='bg-second-100 border-none py-2 px-3 font-mont font-medium rounded-md'>Candidatar-se</button>
-            </div>
+            </div>}
 
         </div>
     )

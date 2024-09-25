@@ -6,7 +6,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { AuthContext } from '@/context/AuthContext';
 import { DataContext } from '@/context/DataContext';
-import { Award, Laptop2, LogOut, LucideCircleUser, LucideCircleUserRound, Search, User2Icon, UserCog2 } from 'lucide-react';
+import { Award, Laptop2, LogOut, LucideCircleUser, LucideCircleUserRound, Search, Trash2Icon, User2Icon, UserCircle2, UserCog2 } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
 import JobsDetails from '../JobsDetails';
 import Profile from '@/components/Profile/Profile';
@@ -14,6 +14,8 @@ import Applications from '@/components/Applications/Applications';
 import axios from 'axios';
 import config from '@/config/config';
 import { useToast } from '@/components/hooks/use-toast';
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from '@/components/ui/carousel';
+import Loading from '@/components/Loading/Loading';
 
 const UserHome = () => {
     const data = useContext(DataContext)
@@ -24,6 +26,9 @@ const UserHome = () => {
 
     const [jobs, setJobs] = useState(data.jobs)
     const [companies, setCompanies] = useState(data.companies)
+
+    const [jobsOfCompany, setJObsOfCompany] = useState([])
+    const [company, setCompany] = useState([])
 
     const [updateJobs, setUpdateJobs] = useState(false)
 
@@ -39,6 +44,28 @@ const UserHome = () => {
             className: "dark font-mont"
         });
     }
+
+    const [loadingJobs, setLoadingJobs] = useState(false);
+
+    const viewJobsOfCompany = async (cnpj) => {
+        setLoadingJobs(true);
+        setJObsOfCompany([]);
+
+        try {
+            const response = await axios.get(`${config.urlAxios}${config.portAxios}/api/companies/${data.formatCnpj(cnpj)}`);
+            setCompany(response.data[0]);
+
+            if (response.data[0]?.company_id) {
+                const response2 = await axios.get(`${config.urlAxios}${config.portAxios}/api/jobs/company/${response.data[0].company_id}`);
+                setJObsOfCompany(response2.data);
+            }
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoadingJobs(false);
+        }
+    };
+
 
     const fetchJobs = async () => {
         try {
@@ -234,7 +261,7 @@ const UserHome = () => {
                                                     <button className='bg-second-100 border-none text-sm p-2 rounded-md font-medium'>Ver detalhes</button>
                                                 </DrawerTrigger>
                                                 <DrawerContent className="dark w-screen max-sm:max-h-[90%] flex items-center">
-                                                    <JobsDetails job={element} />
+                                                    <JobsDetails job={element} candidate={true} applyToJob={() => applyToJob(element.jobs_id)} />
                                                 </DrawerContent>
                                             </Drawer>
                                             <button onClick={() => applyToJob(element.jobs_id)} className='bg-primary-500 border-[1px] rounded-md border-neutral-700 text-second-100 text-sm p-2'>Candidatar-se</button>
@@ -266,7 +293,54 @@ const UserHome = () => {
                                             <span className='text-second-200 text-sm'>{element?.about}</span>
                                         </div>
                                         <div className='flex justify-between'>
-                                            <button className='bg-second-100 border-none text-sm p-2 rounded-md font-medium'>Ver vagas</button>
+                                            <Drawer>
+                                                <DrawerTrigger>
+                                                    <button onClick={() => viewJobsOfCompany(element.cnpj)} className='bg-second-100 border-none text-sm p-2 rounded-md font-medium'>Ver vagas</button>
+                                                </DrawerTrigger>
+                                                <DrawerContent className="dark w-screen h-[80%] max-sm:max-h-[90%] flex items-center">
+                                                    {loadingJobs ? (
+                                                        <div className='flex items-center justify-center w-full h-full'>
+                                                            <Loading />
+                                                        </div>
+                                                    ) : (
+                                                        jobsOfCompany.length > 0 ? (
+                                                            <div className='w-[40%] flex flex-col items-center gap-4 pt-8'>
+                                                                <span className='text-center text-lg font-mont font-semibold text-second-200'>VAGAS PUBLICADAS</span>
+                                                                <Carousel className="dark text-second-100 flex justify-center max-w-xl">
+                                                                    <CarouselContent className="w-full flex justify-start ml-0 gap-16">
+                                                                        {jobsOfCompany.map((job) => (
+                                                                            <CarouselItem key={job.jobs_id} className='z-50 min-w-[35vw] rounded-md p-8 flex flex-col justify-between items-center gap-4 bg-primary-400 border-[1px] border-neutral-700 font-mont'>
+                                                                                <UserCircle2 className="text-neutral-400 h-14 w-14" />
+                                                                                <h3 className="text-lg font-mont font-semibold text-second-100 uppercase">{job.title}</h3>
+                                                                                <span className="text-sm text-second-300">{job.lowDesc}</span>
+                                                                                <span className="text-sm text-second-200">Candidatos:<span className='bg-primary-400 p-2 rounded-md shadow-lg font-medium text-sm'>{`${job.number_candidates} candidato(s)`}</span></span>
+                                                                                <span className="text-sm text-second-200">Data de publicação: <span className='bg-primary-400 p-2 rounded-md shadow-lg font-medium text-sm'>{data.formatDate(job.createdAt)}</span></span>
+                                                                                <div className='flex gap-2'>
+                                                                                    <Drawer>
+                                                                                        <DrawerTrigger>
+                                                                                            <button className='text-second-100 text-sm bg-primary-200 p-2 font-medium rounded-md cursor-pointer'>VER DETALHES</button>
+                                                                                        </DrawerTrigger>
+                                                                                        <DrawerContent className="dark w-screen max-sm:max-h-[90%] flex items-center">
+                                                                                            <JobsDetails job={job} candidate={false} />
+                                                                                        </DrawerContent>
+                                                                                    </Drawer>
+                                                                                    <button onClick={() => deleteJob(job.jobs_id)} className='text-second-100 text-sm bg-primary-200 p-2 font-medium rounded-md cursor-pointer'><Trash2Icon className='text-second-100 cursor-pointer' size={18} /></button>
+                                                                                </div>
+                                                                            </CarouselItem>
+                                                                        ))}
+                                                                    </CarouselContent>
+                                                                    <CarouselNext />
+                                                                    <CarouselPrevious />
+                                                                </Carousel>
+                                                            </div>
+                                                        ) : (
+                                                            <span className='text-neutral-400 text-lg font-mont w-full h-24 px-12'>
+                                                                Não há vagas publicadas para esta empresa.
+                                                            </span>
+                                                        )
+                                                    )}
+                                                </DrawerContent>
+                                            </Drawer>
                                         </div>
                                     </div>
                                 )
