@@ -9,9 +9,9 @@ const JobsDetails = ({ job, candidate, applyToJob }) => {
     }
 
     return (
-        <div className='w-2/3 max-sm:w-full max-sm:px-8 max-sm:max-h-full max-sm:overflow-y-auto flex flex-col gap-6 py-8 xl:overflow-y-auto scroll-style'>
+        <div className='w-2/3 max-sm:w-full max-sm:px-8 max-sm:max-h-full max-md:overflow-y-auto max-md:overflow-x-hidden flex flex-col gap-6 py-8 xl:overflow-y-auto scroll-style'>
             <div className='w-full flex flex-col items-start gap-3'>
-                <h1 className='text-neutral-100 font-mont uppercase font-extrabold text-3xl'>{job.title}</h1>
+                <h1 className='text-neutral-100 font-mont uppercase font-extrabold text-3xl max-md:text-xl'>{job.title}</h1>
                 <div className='flex items-center gap-2'>
                     <p className=' bg-second-200 font-mont text-start py-1 p-2 font-medium rounded-md text-sm'>{job.company}</p>
                     <p className='text-second-100 font-mont font-medium text-sm'>Publicada em {convertDate(job.createdAt)}</p>
@@ -20,7 +20,7 @@ const JobsDetails = ({ job, candidate, applyToJob }) => {
 
             <div className="flex flex-col gap-4">
                 <p className='text-second-300 font-mont text-sm'>{job.lowDesc}</p>
-                <p className='text-second-300 font-mont text-sm'>{job.longDesc}</p>
+                <p className='text-second-300 font-mont text-sm max-md:break-words'>{job.longDesc}</p>
             </div>
 
             <div className='flex flex-col gap-2'>

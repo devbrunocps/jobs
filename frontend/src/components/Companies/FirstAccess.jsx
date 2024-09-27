@@ -66,8 +66,8 @@ const FirstAccess = ({setFirstAccess}) => {
             </CardHeader>
             <CardContent>
                 <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-                    <div className='flex gap-4'>
-                        <div className='flex w-1/2 flex-col gap-1'>
+                    <div className='flex gap-4 max-md:flex-col'>
+                        <div className='flex w-1/2 max-md:w-full flex-col gap-1'>
                             <label className='text-second-100 uppercase text-sm' htmlFor='about'>NÚMERO DE FUNCIONÁRIOS</label>
                             <Select onValueChange={setCollaborators} defaultValue='1-10'>
                                 <SelectTrigger className="bg-primary-400 outline-none border-[1px] text-sm border-neutral-700 rounded-md p-2">{collaborators}</SelectTrigger>
@@ -81,7 +81,7 @@ const FirstAccess = ({setFirstAccess}) => {
                                 </SelectContent>
                             </Select>
                         </div>
-                        <div className='flex w-1/2 flex-col gap-1'>
+                        <div className='flex w-1/2 max-md:w-full flex-col gap-1'>
                             <label className='text-second-100 uppercase text-sm' htmlFor='about'>ANO DE FUNDAÇÃO</label>
                             <input value={foundation} onChange={(ev) => setFoundation(ev.target.value)} className='bg-primary-400 outline-none border-[1px] text-sm border-neutral-700 rounded-md p-2' type='number' id='about' required />
                         </div>

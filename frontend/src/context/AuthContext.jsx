@@ -1,12 +1,15 @@
 import { createContext, useEffect, useState } from "react";
 import axios from 'axios'
 import config from "@/config/config";
+import { useToast } from "@/components/hooks/use-toast";
 
 export const AuthContext = createContext()
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
+
+    const { toast } = useToast()
 
     useEffect(() => {
         const tokenUser = localStorage.getItem("tokenUser");
@@ -120,7 +123,12 @@ export const AuthProvider = ({ children }) => {
             setUser({ token, name, cnpj });
             return response;
         } catch (error) {
-            console.error(error);
+            toast({
+                title: "Falha ao cadastrar",
+                description: error.response.data.message,
+                duration: 5000,
+                className: "dark font-mont text-second-100 text-sm uppercase"
+            })
         }
     };
 

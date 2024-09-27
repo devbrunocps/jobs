@@ -5,13 +5,15 @@ import config from '@/config/config';
 import { AuthContext } from '@/context/AuthContext';
 import { DataContext } from '@/context/DataContext';
 import axios from 'axios';
-import { Laptop2, Trash2Icon, UserCircle2 } from 'lucide-react';
+import { BriefcaseBusiness, Laptop2, LogOut, Trash2Icon, UserCircle2 } from 'lucide-react';
 import React, { useContext, useEffect, useState } from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet';  // Importe o Sheet
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet';
 import { Input } from '@/components/ui/input';
 import { Drawer, DrawerContent, DrawerTrigger } from '@/components/ui/drawer';
 import JobsDetails from '../JobsDetails';
 import Loading from '@/components/Loading/Loading';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import ProfileCompany from '@/components/ProfileCompany/ProfileCompany';
 
 const CompanyHome = () => {
     const data = useContext(DataContext);
@@ -21,6 +23,10 @@ const CompanyHome = () => {
     const [jobs, setJobs] = useState([]);
     const [company, setCompany] = useState(null);
     const [loading, setLoading] = useState(true)
+
+    const handleCompanyUpdate = (updatedCompany) => {
+        setCompany(updatedCompany)
+    };
 
     useEffect(() => {
         setTimeout(() => {
@@ -147,20 +153,50 @@ const CompanyHome = () => {
                                 <span className="text-lg font-semibold font-mont text-second-100">TECJOB</span>
                             </a>
 
-                            <UserCircle2 className="text-second-100 cursor-pointer" size={30} />
+                            <DropdownMenu>
+                                <DropdownMenuTrigger className='cursor-pointer'>
+                                    <UserCircle2 className="text-second-100 cursor-pointer" size={30} />
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent className="dark w-full flex flex-col items-center font-mont">
+                                    <div className="w-full flex justify-center py-2 hover:bg-primary-200 rounded gap-2">
+                                        <span className="text-sm font-mont text-second-300">{company.name}</span>
+                                    </div>
+
+                                    <DropdownMenuSeparator className="w-[90%]" />
+
+                                    <DropdownMenuItem asChild>
+                                        <Sheet>
+                                            <SheetTrigger asChild>
+                                                <button className="flex hover:bg-primary-200 w-full items-center gap-2 px-2 py-[6px]">
+                                                    <BriefcaseBusiness className='text-second-100 cursor-pointer' size={15} />
+                                                    <span className='text-second-100 cursor-pointer text-sm'>SOBRE A EMPRESA</span>
+                                                </button>
+                                            </SheetTrigger>
+                                            <SheetContent className="px-4 dark bg-primary-500 font-mont flex flex-col text-second-100">
+                                                <ProfileCompany company={company} onCompanyUpdate={handleCompanyUpdate} />
+                                            </SheetContent>
+                                        </Sheet>
+                                    </DropdownMenuItem>
+
+                                    <DropdownMenuSeparator className="w-[90%]" />
+                                    <DropdownMenuItem onClick={() => auth.logout()} className="w-full cursor-pointer flex gap-2">
+                                        <LogOut className='text-second-100 cursor-pointer' size={15} />
+                                        <span className='text-second-100 cursor-pointer text-sm'>SAIR</span>
+                                    </DropdownMenuItem>
+                                </DropdownMenuContent>
+                            </DropdownMenu>
                         </header>
 
-                        <div className='w-full py-4 flex justify-between gap-2'>
+                        <div className='w-full py-4 flex max-md:flex-col justify-between gap-2 max-md:gap-4'>
                             <div className='w-full flex flex-col gap-2'>
-                                <h1 className='text-2xl font-bold text-second-100 font-mont uppercase'>Portal de vagas - {auth.user.name}</h1>
+                                <h1 className='text-2xl max-md:text-xl font-bold text-second-100 font-mont uppercase'>Portal de vagas - {company.name}</h1>
                                 <p className='text-md font-mont text-second-300'>Você está na página da empresa</p>
                             </div>
 
-                            {/* Adicionando o Sheet do Shadcn UI */}
                             <div className='w-full flex justify-end items-center gap-2'>
-                                <Sheet >
+                                <Sheet>
                                     <SheetTrigger asChild>
-                                        <button className='bg-green-700 text-second-100 font-mont text-sm font-medium p-3 rounded-md uppercase'>
+                                        <button className='max-md:w-full bg-green-700 text-second-100 font-mont text-sm font-medium p-3 rounded-md uppercase'>
                                             Anunciar vaga
                                         </button>
                                     </SheetTrigger>
@@ -224,7 +260,7 @@ const CompanyHome = () => {
                                                 <Input
                                                     type="text"
                                                     name="benefits"
-                                                    value={formData.benefits.join(', ')} // Mostra os benefícios como uma string
+                                                    value={formData.benefits.join(', ')}
                                                     onChange={handleChange}
                                                     className="font-mont text-second-100 bg-primary-400"
                                                 />
@@ -272,14 +308,14 @@ const CompanyHome = () => {
 
                         <Line style="w-[50%] h-[1px] bg-primary-100" />
 
-                        <div className='flex w-full justify-between'>
+                        <div className='flex w-full max-md:flex-col max-md:justify-center max-md:gap-4 justify-between'>
                             {jobs.length > 0 ? (
-                                <div className='w-[40%] flex flex-col items-center gap-4'>
+                                <div className='w-[40%] max-md:w-full flex flex-col items-center gap-4'>
                                     <span className='text-center text-lg font-mont font-semibold text-second-200'>VAGAS PUBLICADAS</span>
-                                    <Carousel className="dark text-second-100 flex justify-center max-w-xl">
+                                    <Carousel className="dark text-second-100 flex justify-center max-w-xl max-md:max-w-6xl">
                                         <CarouselContent className="w-full flex justify-start ml-0 gap-16">
                                             {jobs.map((job) => (
-                                                <CarouselItem key={job.jobs_id} className='z-50 min-w-[35vw] rounded-md p-8 flex flex-col justify-between items-center gap-4 bg-primary-400 border-[1px] border-neutral-700 font-mont'>
+                                                <CarouselItem key={job.jobs_id} className='z-50 min-w-[35vw] max-md:min-w-full rounded-md p-8 flex flex-col justify-between items-center gap-4 bg-primary-400 border-[1px] border-neutral-700 font-mont'>
                                                     <UserCircle2 className="text-neutral-400 h-14 w-14" />
                                                     <h3 className="text-lg font-mont font-semibold text-second-100 uppercase">{job.title}</h3>
                                                     <span className="text-sm text-second-300">{job.lowDesc}</span>
@@ -304,7 +340,7 @@ const CompanyHome = () => {
                                     </Carousel>
                                 </div>
                             ) : (
-                                <div className='w-[40%] flex flex-col items-center gap-4'>
+                                <div className='w-[40%] max-md:max-w-[90%] flex flex-col items-center gap-4'>
                                     <span className='text-center text-lg font-mont font-semibold text-second-200'>VAGAS PUBLICADAS</span>
                                     <div className='min-w-[35vw] rounded-md p-8 flex flex-col justify-between items-center gap-4 bg-primary-400 border-[1px] border-neutral-700 font-mont'>
                                         <span className='text-center text-lg font-mont font-semibold text-second-200'>NENHUMA VAGA ENCONTRADA</span>
@@ -314,7 +350,7 @@ const CompanyHome = () => {
                             )}
 
                             {company && (
-                                <div className='w-[40%] flex flex-col items-center gap-4'>
+                                <div className='w-[40%] max-md:w-full flex flex-col items-center gap-4'>
                                     <span className='text-center text-lg font-mont font-semibold text-second-200'>SOBRE A EMPRESA</span>
                                     <div className='w-full flex flex-col gap-5 bg-primary-300 p-4 rounded-lg border-[1px] border-neutral-700'>
                                         <span className='text-lg font-mont font-semibold text-second-100 uppercase'>{company.name}</span>

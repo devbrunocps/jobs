@@ -6,10 +6,13 @@ import { Laptop2 } from "lucide-react"
 import { useContext, useState } from "react"
 import { AuthContext } from "@/context/AuthContext"
 import { DataContext } from "@/context/DataContext"
+import { useToast } from "@/components/hooks/use-toast"
 
 const CompanyRegister = () => {
     const data = useContext(DataContext)
-    
+
+    const { toast } = useToast()
+
     const [name, setName] = useState("")
     const [cnpj, setCnpj] = useState("")
     const [password, setPassword] = useState("")
@@ -35,13 +38,27 @@ const CompanyRegister = () => {
         if (name, cnpj, password, confirmPassword) {
             const cnpjFormatted = data.formatCnpj(cnpj)
             if (password === confirmPassword) {
-                const result = await fetchCompanyRegister(name, cnpjFormatted, password)
-                console.log(result)
+                try {
+                    await fetchCompanyRegister(name, cnpjFormatted, password)
+                } catch (error) {
+                    console.error(error.response.data.message)
+                }
+                
             } else {
-                alert("As senhas não conferem.")
+                toast({
+                    title: "Falha ao cadastrar",
+                    description: "As senhas não conferem..",
+                    duration: 5000,
+                     className: "dark font-mont text-second-100 text-sm uppercase"
+                })
             }
         } else {
-            alert("Todos os campos são obrigatórios.")
+            toast({
+                title: "Falha ao cadastrar",
+                description: "Todos os campos são obrigatórios.",
+                duration: 5000,
+                className: "dark font-mont text-second-100 text-sm uppercase"
+            })
         }
     }
 

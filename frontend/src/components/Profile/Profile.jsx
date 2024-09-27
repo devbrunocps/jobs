@@ -34,8 +34,8 @@ const Profile = () => {
     return (
         <div className='w-full flex flex-col gap-4'>
             <SheetHeader>
-                <SheetTitle>Perfil do Usuário</SheetTitle>
-                <SheetDescription>Gerencie suas informações e configurações</SheetDescription>
+                    <SheetTitle>Perfil do Usuário</SheetTitle>
+                <SheetDescription>Gerencie suas informações</SheetDescription>
             </SheetHeader>
             <div className="space-y-4">
                 <div className="flex items-center space-x-4">

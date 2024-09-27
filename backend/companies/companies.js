@@ -30,4 +30,22 @@ router.post('/complete-register', (req, res) => {
     })
 })
 
+//EDITAR EMPRESA
+
+router.put('/:cnpj', (req, res) => {
+    const { name, about, collaborators, foundation, location, phone } = req.body;
+    const { cnpj } = req.params;
+
+    // VALIDAR SE NENHUM DADO É NULL OU UNDEFINED
+    if (!name || !about || !collaborators || !foundation || !location || !phone) {
+        return res.status(400).json({ message: 'Todos os dados são obrigatórios.' })
+    }
+
+    const q = 'UPDATE companies SET name =?, about =?, collaborators =?, foundation =?, location =?, phone =? WHERE cnpj =?'
+    db.query(q, [name, about, collaborators, foundation, location, phone, cnpj], (err, result) => {
+        if (err) return res.json({ message: err })
+        return res.status(200).json(result)
+    })
+})
+
 export default router
